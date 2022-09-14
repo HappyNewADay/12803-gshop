@@ -55,6 +55,9 @@ export default new VueRouter({
                 {
                     path: 'loginpwd',
                     component: LoginPwd
+                }, {
+                    path: '/',
+                    redirect: 'logintel'
                 }
             ]
         }]

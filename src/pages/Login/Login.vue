@@ -5,7 +5,7 @@
         <div class="login_header">
           <h2 class="login_logo">硅谷外卖</h2>
           <div class="login_header_title">
-            <router-link active-class="on" to="/login/logintel">短信登录</router-link>
+            <router-link active-class="on" to="/login/logintel" selected="true">短信登录</router-link>
             <router-link active-class="on" to="/login/loginpwd">密码登录</router-link>
             <!-- <a href="javascript:;" class="on">短信登录</a>
             <a href="javascript:;">密码登录</a>

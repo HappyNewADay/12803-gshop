@@ -1,18 +1,27 @@
 <template>
-    <div id="app">
+  <div id="app">
 
-        <router-view></router-view>
-        <Footer v-show="$route.meta.showFooter"></Footer>
-    </div>
+    <router-view></router-view>
+    <Footer v-show="$route.meta.showFooter"></Footer>
+  </div>
 </template>
 
 <script>
 import Footer from './components/Footer/Footer.vue'
+import { reqFoodTypes } from './api/index.js'
+import { mapActions } from 'vuex'
 export default {
-    name: 'App',
-    components: {
-        Footer
-    }
+  name: 'App',
+  mounted() {
+    this.getAddress()
+    // this.$store.dispatch('getCategorys')
+  },
+  methods: {
+    ...mapActions(['getAddress'])
+  },
+  components: {
+    Footer
+  }
 }
 </script>
 
