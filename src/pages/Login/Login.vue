@@ -54,11 +54,13 @@
           </a>
         </div>
       </div>
+      <AlertTip :alertText="alertText" v-show="alertShow" @closeTips="closeTips" />
     </section>
   </div>
 </template>
 
 <script>
+import AlertTip from '../../components/AlertTips/AlertTips.vue'
 export default {
   name: "Login",
   data() {
@@ -71,12 +73,17 @@ export default {
       code: '',//短信验证码
       name: '',//用户名
       captcha: '',//图形验证码
+      alertText: '',//提示文本
+      alertShow: false,//是否显示提示框
     }
   },
   computed: {
     rightPhone() {
       return /^1[3-9][0-9]{9}$/.test(this.phone)
     }
+  },
+  components: {
+    AlertTip,
   },
   methods: {
     //异步获取短信验证码
@@ -91,24 +98,37 @@ export default {
         }, 1000);
       }
     },
+    showAlert(alertText) {
+      this.alertShow = true
+      this.alertText = alertText
+    },
     login() {
       if (this.loginway) {
         const { phone, code } = this
         if (!this.rightPhone) {
           //手机号不正确
+          this.alertText('手机号不正确')
         } else if (!/^\d{6}$/.test(code)) {
           //验证码必须是六位数字
+          this.alertText('验证码必须是六位数字')
         }
       } else {
         const { name, pwd, captcha } = this
         if (!this.name) {
           //用户不能为空
+          this.alertText('用户不能为空')
         } else if (!this.pwd) {
           //密码不能为空
+          this.alertText('密码不能为空')
         } else if (!this.captcha) {
           //验证码不能为空
+          this.alertText('验证码不能为空')
         }
       }
+    },
+    closeTips() {
+      this.alertShow = false
+      this.alertText = ''
     }
   }
 }
