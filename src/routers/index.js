@@ -6,8 +6,6 @@ import Order from '../pages/Order/Order.vue'
 import Profile from '../pages/Profile/Profile.vue'
 import Search from '../pages/Search/Search.vue'
 import Login from '../pages/Login/Login.vue'
-import LoginTel from '../pages/Loginway/LoginTel.vue'
-import LoginPwd from '../pages/Loginway/LoginPwd.vue'
 import VueRouter from 'vue-router'
 
 export default new VueRouter({
@@ -46,19 +44,6 @@ export default new VueRouter({
             redirect: '/msite'
         }, {
             path: '/login',
-            component: Login,
-            children: [
-                {
-                    path: 'logintel',
-                    component: LoginTel
-                },
-                {
-                    path: 'loginpwd',
-                    component: LoginPwd
-                }, {
-                    path: '/',
-                    redirect: 'logintel'
-                }
-            ]
+            component: Login
         }]
 })
