@@ -13,6 +13,7 @@ module.exports = {
     proxyTable: {
       '/api': {
         target: 'http://localhost:4000',
+        secure: false,//签名认证,判断是否是http 和https
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

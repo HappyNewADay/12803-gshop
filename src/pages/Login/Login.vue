@@ -19,7 +19,7 @@
                     @click.prevent="getCode">{{phoneTime>0?`已发送(${phoneTime}s)`:'获取验证码'}}</button>
                 </section>
                 <section class="login_verification">
-                  <input type="tel" maxlength="8" placeholder="验证码">
+                  <input type="tel" maxlength="8" placeholder="验证码" v-model="code">
                 </section>
                 <section class="login_hint">
                   温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
@@ -40,8 +40,9 @@
                     </div>
                   </section>
                   <section class="login_message">
-                    <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                    <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                    <input type="tel" maxlength="11" placeholder="验证码" v-model="captcha">
+                    <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha" @click="getcaptcha"
+                      ref="captcha">
                   </section>
                 </section>
               </div>
@@ -49,7 +50,7 @@
             </form>
             <a href="javascript:;" class="about_us">关于我们</a>
           </div>
-          <a href="javascript:" class="go_back">
+          <a href="javascript:" class="go_back" @click="goback">
             <i class="iconfont icon-jiantou2"></i>
           </a>
         </div>
@@ -61,6 +62,8 @@
 
 <script>
 import AlertTip from '../../components/AlertTips/AlertTips.vue'
+import { reqSendCode, reqSmsLogin, reqPwdLogin } from '../../api/index.js'
+import { mapState } from "vuex";
 export default {
   name: "Login",
   data() {
@@ -75,60 +78,131 @@ export default {
       captcha: '',//图形验证码
       alertText: '',//提示文本
       alertShow: false,//是否显示提示框
+      codePhone: '',//短信验证码暂存地
     }
   },
   computed: {
     rightPhone() {
       return /^1[3-9][0-9]{9}$/.test(this.phone)
-    }
+    },
+    ...mapState(['testUser'])
   },
   components: {
     AlertTip,
   },
   methods: {
+    goback() {
+      this.$router.replace('/profile')
+    },
     //异步获取短信验证码
-    getCode() {
+    async getCode() {
       if (!this.phoneTime) {
         this.phoneTime = 30
-        const intercalId = setInterval(() => {
+        this.intervalId = setInterval(() => {
           this.phoneTime--
           if (this.phoneTime <= 0) {
-            clearInterval(intercalId)
+            clearInterval(this.intervalId)
           }
         }, 1000);
+        //发送ajax请求(向指定手机发送短信验证码)
+        const result = await reqSendCode(this.phone)
+        if (!result.code) {
+          //显示提示
+          this.codePhone = result.msg
+          this.showAlert(result.msg)
+          //停止倒计时
+          if (this.phoneTime) {
+            this.phoneTime = 0
+            clearInterval(this.intervalId)
+            this.intervalId = undefined
+          }
+        }
       }
     },
     showAlert(alertText) {
       this.alertShow = true
       this.alertText = alertText
     },
-    login() {
+    //登陆表单验证
+    async login() {
+      let result
       if (this.loginway) {
         const { phone, code } = this
         if (!this.rightPhone) {
           //手机号不正确
-          this.alertText('手机号不正确')
+          this.showAlert('手机号不正确')
+          return
         } else if (!/^\d{6}$/.test(code)) {
           //验证码必须是六位数字
-          this.alertText('验证码必须是六位数字')
+          this.showAlert('验证码必须是六位数字')
+          return
         }
+        //发送Ajax请求短信登陆
+        // result = await reqSmsLogin(phone, code)
       } else {
         const { name, pwd, captcha } = this
         if (!this.name) {
           //用户不能为空
-          this.alertText('用户不能为空')
+          this.showAlert('用户不能为空')
+          return
         } else if (!this.pwd) {
           //密码不能为空
-          this.alertText('密码不能为空')
+          this.showAlert('密码不能为空')
+          return
         } else if (!this.captcha) {
           //验证码不能为空
-          this.alertText('验证码不能为空')
+          this.showAlert('验证码不能为空')
+          return
         }
+        //发送AJAx请求密码登录
+        // result = await reqPwdLogin({ name, pwd, captcha })
       }
+      if (this.phoneTime) {
+        this.phoneTime = 0
+        clearInterval(this.intervalId)
+        this.intervalId = undefined
+      }
+      if (this.phone == this.testUser.phone) {
+        const useInfo = { phone: this.phone }
+        const user = useInfo
+        //将user保存到state中
+        this.$store.dispatch('recordUsers', user)
+        //跳转路由到个人中心界面
+        this.$router.replace('/profile')
+      } else if (this.name == this.testUser.name && this.pwd == this.testUser.pwd) {
+        const useInfo = { name: this.name, pwd: this.pwd }
+        const user = useInfo
+        //将user保存到state中
+        this.$store.dispatch('recordUsers', user)
+        //跳转路由到个人中心界面
+        this.$router.replace('/profile')
+      }
+      else {
+        this.getcaptcha()
+        this.showAlert(this.name ? '账户名或密码错误' : '手机号或验证码错误')
+      }
+
+      // // 根据结果对数据进行处理
+      // if (result.code === 0) {
+      //   // const user = result.data
+      //   //将user保存到state中
+      //   this.$store.dispatch('recordUsers', user)
+      //   //跳转路由到个人中心界面
+      //   this.$router.replace('/profile')
+      // } else {
+      //   const message = result.msg
+      //   this.getcaptcha()
+      //   this.showAlert(message)
+      // }
     },
+    //关闭提示框
     closeTips() {
       this.alertShow = false
       this.alertText = ''
+    },
+    //获取一个新的图片验证码
+    getcaptcha() {
+      this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
     }
   }
 }
@@ -238,6 +312,8 @@ export default {
                     background #fff
                     box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
                     transition transform .3s
+                    &.right
+                      transform translateX(27px)
               .login_hint
                 margin-top 12px
                 color #999

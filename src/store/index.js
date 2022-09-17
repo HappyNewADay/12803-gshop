@@ -13,12 +13,14 @@ import {
     reqShopRatings,
     reqShopGoods,
     reqShopInfo,
-    reqSearchShop
+    reqSearchShop,
+    reqPwdLogin
 } from '../api'
 import {
     ADDRESS,
     CATEGORYS,
-    SHOPS
+    SHOPS,
+    USERINFO,
 } from './Typeschange'
 Vue.use(Vuex)
 const actions = {
@@ -29,7 +31,6 @@ const actions = {
         // 提交一个mutation
         if (result.code === 0) {
             const address = result.data
-            console.log(1)
             context.commit('ADDRESS', { address })
         }
     },
@@ -39,7 +40,6 @@ const actions = {
         //提交一个mutation
         if (result.code === 0) {
             const categorys = result.data
-            console.log(1)
             commit('CATEGORYS', { categorys })
         }
     },
@@ -50,10 +50,13 @@ const actions = {
         //提交一个mutation
         if (result.code === 0) {
             const shops = result.data
-            console.log(1)
             commit('SHOPS', { shops })
         }
-    }
+    },
+    //同步记录用户信息
+    recordUsers(context, userinfo) {
+        context.commit('USERINFO', { userinfo })
+    },
 }
 const mutations = {
     ADDRESS(state, { address }) {
@@ -64,7 +67,10 @@ const mutations = {
     },
     SHOPS(state, { shops }) {
         state.shops = shops
-    }
+    },
+    USERINFO(state, { userinfo }) {
+        state.userInfo = userinfo
+    },
 }
 const state = {
     latitude: 40.10038,//维度
@@ -72,6 +78,12 @@ const state = {
     address: {},//包含地址信息
     categorys: [],//食品分类数组
     shops: [],//商家数组
+    userInfo: {},//用户信息
+    testUser: {
+        name: 'abc',
+        pwd: '123',
+        phone: 15879140501,
+    }//测试用户暂时存储地
 }
 const getters = {
 

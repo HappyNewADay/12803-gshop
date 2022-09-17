@@ -1,12 +1,12 @@
 <template>
     <div class="alert_container">
-        <section class="tips_text_container">
+        <section class="tip_text_container">
             <div class="tip_icon">
                 <span></span>
                 <span></span>
             </div>
             <p class="tip_text">{{alertText}}</p>
-            <div class="confirm" @click="closeTips">确认</div>
+            <div class="confrim" @click="closeTips">确认</div>
         </section>
     </div>
 </template>
@@ -28,7 +28,7 @@ export default {
 
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-  @import '../../common/stylus/mixins.styl';
+  @import '../../common/stylus/mixing.styl'
 
   @keyframes tipMove
     0%
