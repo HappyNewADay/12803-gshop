@@ -64,6 +64,7 @@
 import AlertTip from '../../components/AlertTips/AlertTips.vue'
 import { reqSendCode, reqSmsLogin, reqPwdLogin } from '../../api/index.js'
 import { mapState } from "vuex";
+import windows from 'macaddress/lib/windows';
 export default {
   name: "Login",
   data() {
@@ -167,6 +168,7 @@ export default {
         const user = useInfo
         //将user保存到state中
         this.$store.dispatch('recordUsers', user)
+        window.localStorage.setItem('userInfo', user)
         //跳转路由到个人中心界面
         this.$router.replace('/profile')
       } else if (this.name == this.testUser.name && this.pwd == this.testUser.pwd) {
@@ -175,6 +177,7 @@ export default {
         //将user保存到state中
         this.$store.dispatch('recordUsers', user)
         //跳转路由到个人中心界面
+        window.localStorage.setItem('userInfo', user)
         this.$router.replace('/profile')
       }
       else {

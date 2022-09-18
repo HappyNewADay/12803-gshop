@@ -2,10 +2,10 @@
     <section class="msite">
         <!--首页头部-->
         <HeaderTop :title="address.name">
-            <router-link class="header_search" slot="left" :to="(userInfo.name||userInfo.phone) ? '/users':'/login'">
+            <router-link class="header_search" slot="left" to="/search">
                 <i class="iconfont icon-sousuo"></i>
             </router-link>
-            <router-link class="header_login" slot="right" :to="userInfo._id?'/userinfo':'/login'">
+            <router-link class="header_login" slot="right" :to="(userInfo.name||userInfo.phone) ? '/users':'/login'">
                 <span class="header_login_text" v-if="userInfo.name||userInfo.phone">
                     <i class="iconfont icon-person"></i>
                 </span>

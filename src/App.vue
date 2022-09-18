@@ -10,14 +10,16 @@
 import Footer from './components/Footer/Footer.vue'
 import { reqFoodTypes } from './api/index.js'
 import { mapActions } from 'vuex'
+
 export default {
   name: 'App',
   mounted() {
     this.getAddress()
+    // this.getUserInfo()
     // this.$store.dispatch('getCategorys')
   },
   methods: {
-    ...mapActions(['getAddress'])
+    ...mapActions(['getAddress', 'getUserInfo'])
   },
   components: {
     Footer

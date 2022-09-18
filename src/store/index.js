@@ -57,6 +57,15 @@ const actions = {
     recordUsers(context, userinfo) {
         context.commit('USERINFO', { userinfo })
     },
+    //异步获取用户信息
+    async getUserInfo(context) {
+        // const result = await reqUserInfo()
+        // const result = await session[0]
+        if (window.localStorage.userInfo) {
+            const user = window.localStorage.userInfo
+            context.commit('USERINFO', { user })
+        }
+    }
 }
 const mutations = {
     ADDRESS(state, { address }) {

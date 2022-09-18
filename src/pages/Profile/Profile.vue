@@ -89,10 +89,15 @@
         </div>
       </a>
     </section>
+    <section class="profile_my_order border-1px">
+      <mt-button type="danger">退出登录</mt-button>
+    </section>
   </section>
 </template>
 
 <script>
+//注册全局件标签
+import { } from 'mint-ui'
 import HeaderTop from "../../components/HeaderTop/HeaderTop.vue"
 import { mapState } from "vuex";
 export default {
