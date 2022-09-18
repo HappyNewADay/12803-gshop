@@ -90,14 +90,15 @@
       </a>
     </section>
     <section class="profile_my_order border-1px">
-      <mt-button type="danger">退出登录</mt-button>
+      <mt-button type="danger" style="width:100%" v-if="userInfo.name||userInfo.phone" @click=" Leaveout">退出登录
+      </mt-button>
     </section>
   </section>
 </template>
 
 <script>
 //注册全局件标签
-import { } from 'mint-ui'
+import { MessageBox, Toast } from 'mint-ui'
 import HeaderTop from "../../components/HeaderTop/HeaderTop.vue"
 import { mapState } from "vuex";
 export default {
@@ -107,7 +108,19 @@ export default {
   },
   computed: {
     ...mapState(['userInfo'])
-  }
+  },
+  methods: {
+    Leaveout() {
+      MessageBox.confirm('确定退出?').then(action => {
+        //请求退出
+        this.$store.dispatch('logout')
+        Toast('登出成功')
+      },
+        action => {
+          console.log('点击了取消')
+        })
+    }
+  },
 }
 </script>
 

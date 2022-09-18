@@ -21,6 +21,10 @@ import {
     CATEGORYS,
     SHOPS,
     USERINFO,
+    USEROUT,
+    GOODS,
+    RATING,
+    INFO,
 } from './Typeschange'
 Vue.use(Vuex)
 const actions = {
@@ -55,7 +59,9 @@ const actions = {
     },
     //同步记录用户信息
     recordUsers(context, userinfo) {
+        console.log(5)
         context.commit('USERINFO', { userinfo })
+        console.log(state.userInfo)
     },
     //异步获取用户信息
     async getUserInfo(context) {
@@ -64,6 +70,37 @@ const actions = {
         if (window.localStorage.userInfo) {
             const user = window.localStorage.userInfo
             context.commit('USERINFO', { user })
+        }
+    },
+    //异步登出
+    async logout({ commit }) {
+        // const result = await reqLogout()
+        if (state.userInfo) {
+            commit('USEROUT')
+        }
+    },
+    //异步获取商家信息
+    async getShopInfo({ commit }) {
+        const result = await reqShopInfo()
+        if (result.code === 0) {
+            const info = result.data
+            info.score = 3.5
+            commit('INFO', { info })
+        }
+    },
+    //异步获取商家商品列表
+    async getShopGoods({ commit }) {
+        const result = await reqShopGoods()
+        if (result.code === 0) {
+            const goods = result.data
+            commit('GOODS', { goods })
+        }
+    },
+    async getShopRating({ commit }) {
+        const result = await reqShopRatings()
+        if (result.code === 0) {
+            const rating = result.data
+            commit('RATING', { rating })
         }
     }
 }
@@ -80,6 +117,18 @@ const mutations = {
     USERINFO(state, { userinfo }) {
         state.userInfo = userinfo
     },
+    USEROUT(state) {
+        state.userInfo = {}
+    },
+    INFO(state, { info }) {
+        state.info = info
+    },
+    RATING(state, { rating }) {
+        state.rating = rating
+    },
+    GOODS(state, { goods }) {
+        state.goods = goods
+    }
 }
 const state = {
     latitude: 40.10038,//维度
@@ -92,7 +141,11 @@ const state = {
         name: 'abc',
         pwd: '123',
         phone: 15879140501,
-    }//测试用户暂时存储地
+    },//测试用户暂时存储地
+    goods: [],
+    rating: [],
+    info: {},
+
 }
 const getters = {
 

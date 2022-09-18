@@ -6,6 +6,7 @@ import router from './routers'
 import Vuex from 'vuex'
 import store from './store/index.js'
 import { Button } from 'mint-ui'
+import './mock/mockServer'//加载mockserver即可
 
 Vue.config.productionTip = false
 Vue.component(Button.name, Button)//现在有一个全局组件可以使用<mt-button>

@@ -166,18 +166,22 @@ export default {
       if (this.phone == this.testUser.phone) {
         const useInfo = { phone: this.phone }
         const user = useInfo
+        // console.log(user)
         //将user保存到state中
         this.$store.dispatch('recordUsers', user)
-        window.localStorage.setItem('userInfo', user)
+        // window.localStorage.setItem('userInfo', user)
+        // console.log(this.$store.useInfo)
         //跳转路由到个人中心界面
         this.$router.replace('/profile')
       } else if (this.name == this.testUser.name && this.pwd == this.testUser.pwd) {
         const useInfo = { name: this.name, pwd: this.pwd }
         const user = useInfo
+        // console.log(user)
         //将user保存到state中
         this.$store.dispatch('recordUsers', user)
         //跳转路由到个人中心界面
         window.localStorage.setItem('userInfo', user)
+        // console.log(this.$store.useInfo)
         this.$router.replace('/profile')
       }
       else {
