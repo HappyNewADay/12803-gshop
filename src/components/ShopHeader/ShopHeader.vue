@@ -116,19 +116,29 @@ export default {
     data() {
         return {
             shopShow: false,
-            supportClasses: ['activity-green', 'activity-red', 'activity-orange']
+            supportShow: false,
+            supportClasses: ['activity-green', 'activity-red', 'activity-orange'],
+
         }
     },
     computed: {
-        ...mapState('info')
-    }
+        ...mapState(['info'])
+    },
+    methods: {
+        toggleShopShow() {
+            this.shopShow = !this.shopShow
+        },
+        toggleSupportShow() {
+            this.supportShow = !this.supportShow
+        }
+    },
 }
 </script>
 
 
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-  @import '../../common/stylus/mixins.styl'
+  @import "../../common/stylus/mixing.styl"
 
   .shop-header
     height 100%
