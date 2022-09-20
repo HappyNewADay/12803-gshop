@@ -25,6 +25,8 @@ import {
     GOODS,
     RATING,
     INFO,
+    FOODCOUNTDE,
+    FOODCOUNTIN,
 } from './Typeschange'
 Vue.use(Vuex)
 const actions = {
@@ -62,6 +64,15 @@ const actions = {
         console.log(5)
         context.commit('USERINFO', { userinfo })
         console.log(state.userInfo)
+    },
+    //同步更新food中的count
+    updateFoodCount(context, { isAdd, food }) {
+        if (!isAdd) {
+            context.commit('FOODCOUNTIN', { food })
+        }
+        else {
+            context.commit('FOODCOUNTDE', { food })
+        }
     },
     //异步获取用户信息
     async getUserInfo(context) {
@@ -130,6 +141,28 @@ const mutations = {
     },
     GOODS(state, { goods }) {
         state.goods = goods
+    },
+    FOODCOUNTIN(state, { food }) {
+        if (!food.count)//第一次点击增加
+        {
+            // food.count = 1//新增数据(没有数据绑定)
+            // 传递的参数  对象,属性名,属性值
+            Vue.set(food, 'count', 1)  //这样让新增的数据也有绑定
+            // 将food添加到cartFoods中
+            state.cartFoods.push(food)
+        }
+        else {
+            food.count++
+        }
+    },
+    FOODCOUNTDE(state, { food }) {
+        if (food.count) {//只有值才去减
+            food.count--
+            if (food.count === 0) {
+                //将food从cartFoods中移除
+                state.cartFoods.splice(state.cartFoods.indexof(food), 1)
+            }
+        }
     }
 }
 const state = {
@@ -147,10 +180,15 @@ const state = {
     goods: [],
     rating: [],
     info: {},
-
+    cartFoods: [],//购物车中食物的列表
 }
 const getters = {
-
+    totalCount(state) {
+        return state.cartFoods.reduce((preTotal, food) => preTotal + food.count, 0)
+    },
+    totalPrice(state) {
+        return state.cartFoods.reduce((preTotal, food) => preTotal + food.count * food.price, 0)
+    }
 }
 export default new Vuex.Store({
     actions,

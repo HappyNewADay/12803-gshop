@@ -9,3 +9,6 @@ export const USEROUT = 'reset_userinfo'//冲hi用户信息
 export const GOODS = 'receive_goods'//接收商品数组
 export const RATING = 'receive_rating'//接收商家评价数组
 export const INFO = 'receive_info'//接收商家信息
+
+export const FOODCOUNTIN = 'increasement_food_count'
+export const FOODCOUNTDE = 'decreasement_food_count'
